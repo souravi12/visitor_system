@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visitor Form</title>
+     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Visitor Check-In</h1>
+    <form action="/add" method="post">
+  
+        <label>emp_id:</label><br>
+        <input type="text" name="emp_id" required><br><br>
+
+        <label>Name:</label><br>
+        <input type="text" name="name" required><br><br>
+
+         
+        <label>Purpose:</label><br>
+        <input type="text" name="purpose" required><br><br>
+
+        <label for="checkin">Checkin:</label>
+        <input type="time" id ="checkin" name="checkin"><br><br>
+
+
+      <label for="checkout">Checkout:</label>
+<input type="time" id="checkout" name="checkout"><br><br>
+
+  <label for="date">date:</label>
+<input type="date" id="date" name="date"><br><br>
+
+
+        <label>phone_no:</label><br>
+        <input type="text" name="phone_no"><br><br>
+
+    
+
+        <button type="submit">Submit</button>
+    
+   <video id="video" width="320" height="240" autoplay></video><br>
+        <button type="button" onclick="capture()">Capture Photo</button><br>
+        <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+        <input type="hidden" name="photo" id="photo">
+        
+     
+    </form>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const photoInput = document.getElementById('photo');
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            });
+
+        function capture() {
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataURL = canvas.toDataURL('image/jpeg');
+            photoInput.value = dataURL;
+        }
+    </script>
+    <br>
+    <a href="/visitors">View All Visitors</a>
+</body>
+</html>
