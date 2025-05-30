@@ -114,6 +114,7 @@ Thanks to the open-source community for Flask, OpenCV, and MySQL tools.
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
+ls -l README.md
 
 ## Project Status
 
