@@ -35,13 +35,13 @@
 
     
 
-    
+
    <video id="video" width="320" height="240" autoplay></video><br>
         <button type="button" onclick="capture()">Capture Photo</button><br>
         <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
         <input type="hidden" name="photo" id="photo">
         
-     
+     <button type="submit">Submit</button>
     </form>
 
     <script>
@@ -59,11 +59,12 @@
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             const dataURL = canvas.toDataURL('image/jpeg');
             photoInput.value = dataURL;
+        
         }
     </script>
 
     
-        <button type="submit">Submit</button>
+        
     <br>
     <a href="/visitors">View All Visitors</a>
     </div>
