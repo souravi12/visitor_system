@@ -1,48 +1,89 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Visitor Form</title>
-     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitor Check-In</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="wrapper">
-    <h1>Visitor Check-In</h1>
-    <form action="/add" method="post">
-  
-        <label>emp_id:</label><br>
-        <input type="text" name="emp_id" required><br><br>
+    <div class="wrapper" style="max-width: 720px;">
 
-        <label>Name:</label><br>
-        <input type="text" name="name" required><br><br>
+        <div class="header">
+            <div class="header-tag">Secure Facility</div>
+            <h1>Visitor <span>Check-In</span></h1>
+        </div>
 
-         
-        <label>Purpose:</label><br>
-        <input type="text" name="purpose" required><br><br>
+        <div class="card">
+            <form action="/add" method="post">
 
-        <label for="checkin">Checkin:</label>
-        <input type="time" id ="checkin" name="checkin"><br><br>
+                <div class="section-label">Identity</div>
+                <div class="grid-2">
+                    <div class="field">
+                        <label for="emp_id">Employee ID</label>
+                        <input type="text" id="emp_id" name="emp_id" placeholder="e.g. EMP-0042" required>
+                    </div>
+                    <div class="field">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" placeholder="John Doe" required>
+                    </div>
+                    <div class="field span-2">
+                        <label for="phone_no">Phone Number</label>
+                        <input type="text" id="phone_no" name="phone_no" placeholder="+91 00000 00000">
+                    </div>
+                </div>
 
+                <div class="section-label">Visit Details</div>
+                <div class="grid-2">
+                    <div class="field span-2">
+                        <label for="purpose">Purpose of Visit</label>
+                        <input type="text" id="purpose" name="purpose" placeholder="Meeting, Delivery, Interview..." required>
+                    </div>
+                    <div class="field">
+                        <label for="checkin">Check-In Time</label>
+                        <input type="time" id="checkin" name="checkin">
+                    </div>
+                    <div class="field">
+                        <label for="checkout">Check-Out Time</label>
+                        <input type="time" id="checkout" name="checkout">
+                    </div>
+                    <div class="field">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" name="date">
+                    </div>
+                </div>
 
-      <label for="checkout">Checkout:</label>
-<input type="time" id="checkout" name="checkout"><br><br>
+                <div class="section-label">Photo Capture</div>
+                <div class="camera-card">
+                    <div class="camera-feed">
+                        <video id="video" autoplay playsinline></video>
+                        <div class="camera-overlay"></div>
+                        <div class="camera-status">Live Feed</div>
+                    </div>
+                    <div class="camera-actions">
+                        <span class="capture-hint" id="captureHint">Position face in frame</span>
+                        <span class="captured-badge" id="capturedBadge">Photo captured</span>
+                        <button type="button" class="btn-capture" onclick="capture()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="4"/>
+                                <path d="M3 9a2 2 0 0 1 2-2h1l2-2h8l2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+                            </svg>
+                            Capture
+                        </button>
+                    </div>
+                </div>
 
-  <label for="date">date:</label>
-<input type="date" id="date" name="date"><br><br>
+                <canvas id="canvas" width="320" height="240"></canvas>
+                <input type="hidden" name="photo" id="photo">
 
+                <button type="submit">Submit Check-In →</button>
 
-        <label>phone_no:</label><br>
-        <input type="text" name="phone_no"><br><br>
+            </form>
+        </div>
 
-    
+        <a href="/visitors" class="footer-link">↗ View All Visitors</a>
 
-
-   <video id="video" width="320" height="240" autoplay></video><br>
-        <button type="button" onclick="capture()">Capture Photo</button><br>
-        <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
-        <input type="hidden" name="photo" id="photo">
-        
-     <button type="submit">Submit</button>
-    </form>
+    </div>
 
     <script>
         const video = document.getElementById('video');
@@ -50,23 +91,19 @@
         const photoInput = document.getElementById('photo');
 
         navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                video.srcObject = stream;
+            .then(stream => { video.srcObject = stream; })
+            .catch(() => {
+                document.querySelector('.camera-status').textContent = 'Camera unavailable';
             });
 
         function capture() {
             const context = canvas.getContext('2d');
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const dataURL = canvas.toDataURL('image/jpeg');
-            photoInput.value = dataURL;
-        
+            photoInput.value = canvas.toDataURL('image/jpeg');
+
+            document.getElementById('captureHint').style.display = 'none';
+            document.getElementById('capturedBadge').classList.add('show');
         }
     </script>
-
-    
-        
-    <br>
-    <a href="/visitors">View All Visitors</a>
-    </div>
 </body>
 </html>

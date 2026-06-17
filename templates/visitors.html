@@ -1,70 +1,189 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visitor List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
+        body { align-items: flex-start; }
+
+        .page-header {
+            width: 90%;
+            margin: 0 auto 28px;
+        }
+
+        .visitors-table-wrap {
+            width: 90%;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+
         table {
-            border-collapse: collapse;
-            width: 80%;
-            margin: auto;
+            width: 100%;
+            margin: 0;
         }
-        th, td {
-            padding: 10px;
-            text-align: center;
-            border: 1px solid black;
+
+        .visitor-photo {
+            width: 52px;
+            height: 52px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid var(--border);
         }
-        h1 {
-            text-align: center;
+
+        .no-image {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
         }
-        a {
+
+        .back-link {
             display: block;
             text-align: center;
-            margin-top: 20px;
+            margin-top: 28px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            letter-spacing: 0.06em;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: var(--accent); text-decoration: none; }
+
+        .empty {
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 40px;
+        }
+
+        .checkout-form {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .checkout-form input[type="time"] {
+            padding: 4px 6px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            font-size: 12px;
+        }
+
+        .checkout-form button {
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: none;
+            background: var(--accent);
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .checked-out {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
         }
     </style>
 </head>
 <body>
-    <h1>All Visitors</h1>
-    {% if visitors %}
-    <table>
-        <thead>
-            <tr>
-                 <th>emp_id</th>
-                <th>Name</th>
-                <th>Purpose</th>
-                <th>Check-in</th>
-                <th>Check-out</th>
-                <th>phone_no</th>
-                <th>Photo</th>
+    <div style="width:100%; padding: 40px 16px 80px;">
 
-            </tr>
-        </thead>
-        <tbody>
-            {% for visitor in visitors %}
-            <tr>
-                <td>{{ visitor[0] }}</td>
-                <td>{{ visitor[1] }}</td>
-                <td>{{ visitor[2] }}</td>
-                <td>{{ visitor[3] }}</td>
-                <td>{{ visitor[4] }}</td>
-                <td>{{ visitor[5] }}</td>
-                
-        
-            <td>
-                 {% if visitor[6] %}
-                    <img src="data:image/jpeg;base64,{{ visitor[6]|b64encode }}" alt="Visitor Photo">
-                    {% else %}
-                    No Image
-                    {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-        <p style="text-align:center;">No visitors found.</p>
-    {% endif %}
+        <div class="page-header">
+            <div class="header-tag">Records</div>
+            <h1>All <span>Visitors</span></h1>
+        </div>
 
-    <a href="/">Add Another Visitor</a>
+        <div class="dashboard">
+            <div class="dashboard-card">
+                <h3>Total Visitors</h3>
+                <p>{{ total }}</p>
+            </div>
+            <div class="dashboard-card">
+                <h3>Currently Inside</h3>
+                <p>{{ inside }}</p>
+            </div>
+        </div>
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by name, phone, or ID..."
+            style="width: 90%; margin: 20px auto; display: block; padding: 10px; border-radius: 8px;"
+        >
+
+        {% if visitors %}
+        <div class="visitors-table-wrap">
+            <table id="visitorTable">
+                <thead>
+                    <tr>
+                        <th>Emp ID</th>
+                        <th>Name</th>
+                        <th>Purpose</th>
+                        <th>Check-In</th>
+                        <th>Check-Out</th>
+                        <th>Phone</th>
+                        <th>Date</th>
+                        <th>Photo</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for visitor in visitors %}
+                    <tr>
+                        <td>{{ visitor[1] }}</td>
+                        <td>{{ visitor[2] }}</td>
+                        <td>{{ visitor[3] }}</td>
+                        <td>{{ visitor[4] }}</td>
+                        <td>{{ visitor[5] }}</td>
+                        <td>{{ visitor[6] }}</td>
+                        <td>{{ visitor[7] }}</td>
+                        <td>
+                            {% if visitor[8] %}
+                                <img class="visitor-photo"
+                                     src="data:image/jpeg;base64,{{ visitor[8]|b64encode }}"
+                                     alt="Visitor Photo">
+                            {% else %}
+                                <span class="no-image">No image</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if not visitor[5] or visitor[5]|string == '00:00:00' %}
+                                <form class="checkout-form" method="POST" action="/checkout/{{ visitor[0] }}">
+                                    <input type="time" name="checkout_time" required>
+                                    <button type="submit">Check Out</button>
+                                </form>
+                            {% else %}
+                                <span class="checked-out">✓ Done</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <p class="empty">No visitors found.</p>
+        {% endif %}
+
+        <a href="/index" class="back-link">← Add Another Visitor</a>
+
+    </div>
+    <script>
+        document.getElementById("searchInput").addEventListener("keyup", function() {
+            let input = this.value.toLowerCase();
+            let rows = document.querySelectorAll("#visitorTable tbody tr");
+
+            rows.forEach(row => {
+                let text = row.innerText.toLowerCase();
+                row.style.display = text.includes(input) ? "" : "none";
+            });
+        });
+    </script>
 </body>
 </html>
