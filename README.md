@@ -1,124 +1,54 @@
-README.md** you can copy-paste as is:
-
-````markdown
 # Visitor Management System
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Python](https://img.shields.io/badge/Python-3.x-blue)
+![Flask](https://img.shields.io/badge/Flask-3.0-lightgrey)
 
----
+## About
+A web-based Visitor Management System built with Flask during my internship at WCL. It allows organizations to register visitors, capture their details, and maintain a log — all through a simple browser interface.
 
-## Description
+## Problem it Solves
+Manual visitor registers at offices are slow, hard to search, and easy to lose. This system digitizes the process — faster registration, searchable records, and photo capture.
 
-The Visitor Management System is a Flask-based web application designed to streamline visitor registration by capturing visitor details and photographs. This system stores all information securely in a MySQL database. It is ideal for offices, events, or any organization needing an efficient way to manage visitors.
+## Features
+- Visitor registration with name, contact info, and photo
+- Real-time photo capture using OpenCV
+- Visitor records stored in MySQL database
+- Clean UI built with HTML/CSS
 
-### Features
+## Tech Stack
+| Layer | Technology |
+|-------|-----------|
+| Backend | Python, Flask |
+| Frontend | HTML, CSS |
+| Database | MySQL |
+| Image Capture | OpenCV |
 
-- Visitor registration form with fields for name, contact info, and photo capture  
-- Integration with OpenCV for real-time image capture  
-- Secure storage of visitor details and images in a MySQL database  
-- Clean, simple user interface for ease of use  
-
----
-
-## Visuals
-
-*Screenshots and GIFs can be added here to showcase the app’s UI and image capture functionality.*
-
----
+## Screenshots
+> *(Add screenshots here)*
 
 ## Installation
 
 ### Requirements
+- Python 3.x
+- MySQL Workbench installed and running
 
-- Python 3.x  
-- MySQL server installed and running  
-- pip (Python package manager)  
+```bash
+git clone https://github.com/souravi12/visitor_system.git
+cd visitor_system
+pip install -r requirements.txt
+```
 
-### Steps
+Configure your MySQL credentials in `app.py`, then:
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/souravi12/visitor_system.git
-   cd visitor_system
-````
+```bash
+python app.py
+```
 
-2. Install required packages:
+Visit `http://127.0.0.1:5000` in your browser.
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+## Developer
+Built by Souravi — internship project at WCL.
+```
 
-3. Configure the MySQL connection settings in your application configuration file.
-
-4. Run the Flask application:
-
-   ```bash
-   python app.py
-   ```
-
-5. Open your browser and visit:
-
-   ```
-   http://127.0.0.1:5000/
-   ```
-
----
-
-## Usage
-
-Fill out the visitor registration form, capture the visitor’s image, and submit the form. The visitor’s information and photo will be saved into the MySQL database.
-
----
-
-## Support
-
-For issues or questions, please open an issue on the GitHub repository:
-[https://github.com/souravi12/visitor\_system/issues](https://github.com/souravi12/visitor_system/issues)
-
----
-
-## Roadmap
-
-Planned future enhancements include:
-
-* Adding role-based authentication
-* Exporting visitor logs to CSV or PDF
-* Email notifications upon visitor registration
-
-Contributions and feature suggestions are welcome!
-
----
-
-## Contributing
-
-Contributions are encouraged! To contribute:
-
-1. Fork the repository
-2. Create a new branch for your feature or bugfix
-3. Commit your changes with descriptive messages
-4. Push your branch and open a Pull Request
-
-Please ensure your code follows PEP8 style guidelines and includes necessary documentation.
-
----
-
-## Authors and Acknowledgments
-
-Developed by Souravi.
-Thanks to the open-source community for Flask, OpenCV, and MySQL tools.
-
----
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-ls -l README.md
-
-## Project Status
-
-This project is actively maintained.
-Feel free to contribute or report issues!
-
-
+Also I'd recommend deleting `database.db` from your repo since you're using MySQL — it's just a confusing leftover file. Want help doing that?
